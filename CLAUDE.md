@@ -10,7 +10,7 @@ Obsidian Podcast: 複数のRSSフィードから記事を取得し、全文を�
 
 <!-- 設計対話で決定後に更新 -->
 ```
-obsidian-podcast-pj/
+obsidian-podcast/
 ├── .claude/           # VDD Framework 設定
 ├── src/               # ソースコード（構成は設計対話で決定）
 ├── tests/

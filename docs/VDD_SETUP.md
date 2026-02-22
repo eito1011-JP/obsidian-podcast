@@ -26,7 +26,7 @@ claude login
 プロジェクトルートがまだ git リポジトリでない場合:
 
 ```bash
-cd /Users/eito/obsidian-podcast-pj
+cd /path/to/obsidian-podcast
 git init
 git branch -m main
 ```
@@ -36,13 +36,13 @@ git branch -m main
 プロジェクトルートで以下を実行:
 
 ```bash
-cd /Users/eito/obsidian-podcast-pj
+cd /path/to/obsidian-podcast
 bash vdd-framework/scripts/init.sh
 ```
 
 対話形式で以下を設定します:
 
-1. **プロジェクト名**: デフォルト `obsidian-podcast-pj` で Enter
+1. **プロジェクト名**: デフォルト `obsidian-podcast` で Enter
 2. **テストコマンド**: 技術スタック未決定なら空 Enter（後で CLAUDE.md で設定）
 3. **チェックコマンド**: 同上
 4. **ビルドコマンド**: 同上
