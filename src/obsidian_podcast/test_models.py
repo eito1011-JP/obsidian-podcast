@@ -79,3 +79,40 @@ class TestArticle:
         assert article.title == "Test Article"
         assert article.status == ProcessingStatus.COMPLETED
         assert article.audio_url == "https://cdn.example.com/audio.mp3"
+
+    def test_new_fields_defaults(self):
+        """New fields for feed-scraper: content, is_full_text, language, is_podcast."""
+        from obsidian_podcast.models import Article
+
+        article = Article(
+            url="https://example.com/post",
+            feed_url="https://example.com/feed.xml",
+        )
+        assert article.content is None
+        assert article.is_full_text is True
+        assert article.language is None
+        assert article.is_podcast is False
+
+    def test_podcast_article(self):
+        from obsidian_podcast.models import Article
+
+        article = Article(
+            url="https://example.com/episode",
+            feed_url="https://example.com/feed.xml",
+            audio_url="https://example.com/ep1.mp3",
+            is_podcast=True,
+        )
+        assert article.is_podcast is True
+        assert article.audio_url == "https://example.com/ep1.mp3"
+
+    def test_fallback_content(self):
+        from obsidian_podcast.models import Article
+
+        article = Article(
+            url="https://example.com/post",
+            feed_url="https://example.com/feed.xml",
+            content="RSS summary content",
+            is_full_text=False,
+        )
+        assert article.content == "RSS summary content"
+        assert article.is_full_text is False

@@ -37,3 +37,7 @@ class Article:
     status: ProcessingStatus = ProcessingStatus.PENDING
     audio_url: str | None = None
     error_message: str | None = None
+    content: str | None = None
+    is_full_text: bool = True
+    language: str | None = None
+    is_podcast: bool = False
