@@ -26,7 +26,7 @@ claude login
 プロジェクトルートがまだ git リポジトリでない場合:
 
 ```bash
-cd /path/to/obsidian-podcast
+cd /Users/eito/obsidian-podcast
 git init
 git branch -m main
 ```
@@ -36,7 +36,7 @@ git branch -m main
 プロジェクトルートで以下を実行:
 
 ```bash
-cd /path/to/obsidian-podcast
+cd /Users/eito/obsidian-podcast
 bash vdd-framework/scripts/init.sh
 ```
 
