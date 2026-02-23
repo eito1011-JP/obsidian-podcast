@@ -93,3 +93,47 @@ class TestConfigPaths:
         assert "feeds" in data
         assert "tts" in data
         assert "obsidian" in data
+
+
+class TestLLMConfig:
+    def test_llm_config_defaults(self):
+        from obsidian_podcast.config import LLMConfig
+
+        config = LLMConfig()
+        assert config.enabled is False
+        assert config.engine == "openai"
+        assert config.model == "qwen2.5"
+        assert config.api_key_env == ""
+        assert config.base_url is None
+        assert config.max_chunk_chars == 4000
+
+    def test_app_config_has_llm_field(self):
+        from obsidian_podcast.config import AppConfig, LLMConfig
+
+        config = AppConfig()
+        assert isinstance(config.llm, LLMConfig)
+        assert config.llm.enabled is False
+
+    def test_llm_config_from_yaml(self, tmp_path):
+        from obsidian_podcast.config import AppConfig
+
+        yaml_content = {
+            "llm": {
+                "enabled": True,
+                "engine": "claude",
+                "model": "claude-sonnet-4-20250514",
+                "api_key_env": "ANTHROPIC_API_KEY",
+                "base_url": "https://api.anthropic.com",
+                "max_chunk_chars": 8000,
+            },
+        }
+        config_file = tmp_path / "config.yaml"
+        config_file.write_text(yaml.dump(yaml_content))
+
+        config = AppConfig.from_yaml(config_file)
+        assert config.llm.enabled is True
+        assert config.llm.engine == "claude"
+        assert config.llm.model == "claude-sonnet-4-20250514"
+        assert config.llm.api_key_env == "ANTHROPIC_API_KEY"
+        assert config.llm.base_url == "https://api.anthropic.com"
+        assert config.llm.max_chunk_chars == 8000

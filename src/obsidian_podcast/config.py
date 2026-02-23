@@ -51,6 +51,17 @@ class SummaryConfig(BaseModel):
     model: str = "llama3"
 
 
+class LLMConfig(BaseModel):
+    """LLM provider configuration for podcast script generation."""
+
+    enabled: bool = False
+    engine: str = "openai"
+    model: str = "qwen2.5"
+    api_key_env: str = ""
+    base_url: str | None = None
+    max_chunk_chars: int = 4000
+
+
 class AppConfig(BaseModel):
     """Root application configuration."""
 
@@ -59,6 +70,7 @@ class AppConfig(BaseModel):
     storage: StorageConfig = Field(default_factory=StorageConfig)
     obsidian: ObsidianConfig = Field(default_factory=ObsidianConfig)
     summary: SummaryConfig = Field(default_factory=SummaryConfig)
+    llm: LLMConfig = Field(default_factory=LLMConfig)
 
     @classmethod
     def from_yaml(cls, path: Path) -> "AppConfig":

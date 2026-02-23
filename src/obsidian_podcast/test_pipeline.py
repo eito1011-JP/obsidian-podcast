@@ -67,3 +67,32 @@ async def test_pipeline_step_is_abstract():
 
     with pytest.raises(TypeError):
         PipelineStep()  # type: ignore[abstract]
+
+
+class TestLLMScriptStep:
+    @pytest.mark.asyncio
+    async def test_process_with_mock_provider(self):
+        from unittest.mock import AsyncMock
+
+        from obsidian_podcast.pipeline import LLMScriptStep
+
+        mock_provider = AsyncMock()
+        mock_provider.generate.return_value = "Podcast script output"
+
+        step = LLMScriptStep(provider=mock_provider, max_chunk_chars=4000)
+        result = await step.process("Article text here")
+        assert result == "Podcast script output"
+
+    @pytest.mark.asyncio
+    async def test_in_pipeline(self):
+        from unittest.mock import AsyncMock
+
+        from obsidian_podcast.pipeline import LLMScriptStep, Pipeline
+
+        mock_provider = AsyncMock()
+        mock_provider.generate.return_value = "Transformed"
+
+        step = LLMScriptStep(provider=mock_provider)
+        pipeline = Pipeline(steps=[step])
+        result = await pipeline.run("Input text")
+        assert result == "Transformed"
