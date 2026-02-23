@@ -34,4 +34,6 @@ class OpenAILLMProvider(LLMProvider):
             model=self.model,
             messages=messages,
         )
+        if not response.choices:
+            return ""
         return response.choices[0].message.content or ""

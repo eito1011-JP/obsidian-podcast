@@ -128,7 +128,10 @@ async def generate_podcast_script(
             result = await provider.generate(chunk, system_prompt=SYSTEM_PROMPT)
             results.append(result)
         except Exception:
-            logger.warning("LLM generation failed for chunk, using original text")
+            logger.warning(
+                "LLM generation failed for chunk, using original text",
+                exc_info=True,
+            )
             results.append(chunk)
 
     return "\n\n".join(results)
