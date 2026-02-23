@@ -1,6 +1,15 @@
 """LLM provider base class, registry, and podcast script generation."""
 
+from __future__ import annotations
+
+import logging
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from obsidian_podcast.config import LLMConfig
+
+logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = (
     "あなたはラジオDJです。"
@@ -16,7 +25,7 @@ SYSTEM_PROMPT = (
     "- 「それでは」「さて」などの接続詞で段落間をつなぐ"
 )
 
-_registry: dict[str, type["LLMProvider"]] = {}
+_registry: dict[str, type[LLMProvider]] = {}
 
 
 class LLMProvider(ABC):
@@ -38,7 +47,7 @@ def register_llm_engine(name: str):
     return decorator
 
 
-def create_llm_engine(config) -> LLMProvider:
+def create_llm_engine(config: LLMConfig) -> LLMProvider:
     """Create an LLM provider instance from config."""
     if config.engine not in _registry:
         available = list(_registry.keys())
@@ -115,7 +124,11 @@ async def generate_podcast_script(
 
     results: list[str] = []
     for chunk in chunks:
-        result = await provider.generate(chunk, system_prompt=SYSTEM_PROMPT)
-        results.append(result)
+        try:
+            result = await provider.generate(chunk, system_prompt=SYSTEM_PROMPT)
+            results.append(result)
+        except Exception:
+            logger.warning("LLM generation failed for chunk, using original text")
+            results.append(chunk)
 
     return "\n\n".join(results)

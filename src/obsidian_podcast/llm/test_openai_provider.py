@@ -81,3 +81,28 @@ class TestOpenAILLMProvider:
 
             call_kwargs = mock_openai.AsyncOpenAI.call_args
             assert call_kwargs[1]["api_key"] == "ollama"
+
+    @pytest.mark.asyncio
+    async def test_generate_returns_empty_on_none_content(self):
+        mock_choice = MagicMock()
+        mock_choice.message.content = None
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        mock_client = AsyncMock()
+        mock_client.chat.completions.create.return_value = mock_response
+
+        with patch("obsidian_podcast.llm.openai_provider.openai") as mock_openai:
+            mock_openai.AsyncOpenAI.return_value = mock_client
+
+            from obsidian_podcast.llm.openai_provider import OpenAILLMProvider
+
+            config = MagicMock()
+            config.api_key_env = ""
+            config.model = "gpt-4"
+            config.base_url = None
+
+            provider = OpenAILLMProvider(config)
+            result = await provider.generate("test")
+
+            assert result == ""

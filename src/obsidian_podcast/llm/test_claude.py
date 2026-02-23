@@ -42,3 +42,25 @@ class TestClaudeLLMProvider:
                 system="sys",
                 messages=[{"role": "user", "content": "test prompt"}],
             )
+
+    @pytest.mark.asyncio
+    async def test_generate_returns_empty_on_no_content(self):
+        mock_response = MagicMock()
+        mock_response.content = []
+
+        mock_client = AsyncMock()
+        mock_client.messages.create.return_value = mock_response
+
+        with patch("obsidian_podcast.llm.claude.anthropic") as mock_anthropic:
+            mock_anthropic.AsyncAnthropic.return_value = mock_client
+
+            from obsidian_podcast.llm.claude import ClaudeLLMProvider
+
+            config = MagicMock()
+            config.api_key_env = ""
+            config.model = "claude-sonnet-4-20250514"
+
+            provider = ClaudeLLMProvider(config)
+            result = await provider.generate("test")
+
+            assert result == ""

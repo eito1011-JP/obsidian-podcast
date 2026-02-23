@@ -34,4 +34,4 @@ class OpenAILLMProvider(LLMProvider):
             model=self.model,
             messages=messages,
         )
-        return response.choices[0].message.content
+        return response.choices[0].message.content or ""

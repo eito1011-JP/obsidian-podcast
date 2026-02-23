@@ -129,6 +129,20 @@ class TestGeneratePodcastScript:
         assert mock_provider.generate.call_count == 2
 
 
+class TestGeneratePodcastScriptErrorHandling:
+    @pytest.mark.asyncio
+    async def test_fallback_to_original_on_provider_error(self):
+        from obsidian_podcast.llm.base import generate_podcast_script
+
+        mock_provider = AsyncMock()
+        mock_provider.generate.side_effect = RuntimeError("API error")
+
+        result = await generate_podcast_script(
+            "Some article text", mock_provider, max_chunk_chars=4000
+        )
+        assert result == "Some article text"
+
+
 class TestSystemPrompt:
     def test_system_prompt_defined(self):
         from obsidian_podcast.llm.base import SYSTEM_PROMPT

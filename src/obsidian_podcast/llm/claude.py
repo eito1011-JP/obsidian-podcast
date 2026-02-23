@@ -28,4 +28,6 @@ class ClaudeLLMProvider(LLMProvider):
             system=system_prompt,
             messages=[{"role": "user", "content": prompt}],
         )
+        if not response.content:
+            return ""
         return response.content[0].text
