@@ -1,3 +1,12 @@
 .worktrees/
 .local-docs/
 .claude/agent-memory-local/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+.pytest_cache/
